@@ -1,0 +1,68 @@
+# -*- Mode: python; py-indent-offset: 4; indent-tabs-mode: nil; coding: utf-8; -*-
+
+# def options(opt):
+#     pass
+
+# def configure(conf):
+#     conf.check_nonfatal(header_name='stdint.h', define_name='HAVE_STDINT_H')
+
+def build(bld):
+
+    module = bld.create_ns3_module('nr-u', ['core', 'nr', 'spectrum', 'antenna', 'wifi'])
+    module.source = [
+          'model/nr-on-off-access-manager.cc',
+          'model/nr-lbt-access-manager.cc',
+          'model/application-scenario.cc',
+          'model/interference-application.cc',
+          'model/l2-setup.cc',
+          'model/no-interference-node-distribution.cc',
+          'model/node-distribution-scenario.cc',
+          'model/nr-single-bwp-setup.cc',
+          'model/single-pair-node-scenario.cc',
+          'model/varying-interference-node-distribution.cc',
+          'model/in-front-node-distribution.cc',
+          'model/file-output-manager.cc',
+          'model/sqlite-output-manager.cc',
+          'model/half-matrix-layout.cc',
+          'model/wifi-setup.cc',
+          'helper/nr-u-trace-helper.cc',
+        ]
+
+    if 'ns3-wifi-80211ad-nist' in bld.env['NS3_ENABLED_MODULES']:
+      module.source.append('model/wigig-setup.cc')
+
+    module_test = bld.create_ns3_module_test_library('nr-u')
+    module_test.source = [
+        ]
+
+    headers = bld(features='ns3header')
+    headers.module = 'nr-u'
+    headers.source = [
+          'model/nr-on-off-access-manager.h',
+          'model/nr-lbt-access-manager.h',
+          'model/application-scenario.h',
+          'model/interference-application.h',
+          'model/in-front-node-distribution.h',
+          'model/l2-setup.h',
+          'model/no-interference-node-distribution.h',
+          'model/node-distribution-scenario.h',
+          'model/nr-single-bwp-setup.h',
+          'model/single-pair-node-scenario.h',
+          'model/varying-interference-node-distribution.h',
+          'model/wigig-setup.h',
+          'model/output-manager.h',
+          'model/file-output-manager.h',
+          'model/sqlite-output-manager.h',
+          'model/half-matrix-layout.h',
+          'model/wifi-setup.h',
+          'helper/nr-u-trace-helper.h',
+        ]
+
+    if 'ns3-wifi-80211ad-nist' in bld.env['NS3_ENABLED_MODULES']:
+      headers.source.append('model/wigig-setup.h')
+
+    if bld.env.ENABLE_EXAMPLES:
+        bld.recurse('examples')
+
+    # bld.ns3_python_bindings()
+
